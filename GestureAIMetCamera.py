@@ -1,11 +1,17 @@
 import mediapipe as mp
+import mediapipe.python
+import mediapipe.python.solutions.hands as mp_hands
+
 import cv2
- 
+
+handMovement = {}
+
 mp_drawing = mp.solutions.drawing_utils
-mp_hands = mp.solutions.hands
- 
-capture = cv2.VideoCapture(2)
- 
+# mediapipe_hands = mediapipe.solutions.hands
+# mp_hands = hands.Hands
+
+capture = cv2.VideoCapture(0)
+
 with mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) as hands:
     while capture.isOpened():
         ret, frame = capture.read()
@@ -22,7 +28,24 @@ with mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) a
                                                 color=(255, 0, 255), thickness=4, circle_radius=2),
                                             connection_drawing_spec=mp.solutions.drawing_utils.DrawingSpec(
                                                 color=(20, 180, 90), thickness=2, circle_radius=2)
-                                            )
+                                            )  
+
+                for index, landmark in enumerate(hand_lms.landmark[9 : 13]):
+                    if index == 0:
+                        handMovement["middleFingerMCPXPosition"] = landmark.x
+                        handMovement["middleFingerMCPYPosition"] = landmark.y
+
+                        if handMovement['middleFingerMCPXPosition'] <= 0.45:
+                            handMovement["moveLeft"] = True
+                        else:
+                            handMovement['moveLeft'] = False
+
+                        if handMovement['middleFingerMCPXPosition'] >= 0.55:
+                            handMovement['moveRight'] = True
+                        else:
+                            handMovement['moveRight'] = False
+
+                    print(handMovement)
     
         cv2.imshow('Webcam', image)
     
