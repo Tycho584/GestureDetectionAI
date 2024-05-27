@@ -1,12 +1,13 @@
 #@markdown We implemented some functions to visualize the gesture recognition results. <br/> Run the following cell to activate the functions.
 from matplotlib import pyplot as plt
-import mediapipe as mp
+import mediapipe
 from mediapipe.framework.formats import landmark_pb2
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 import urllib
 import cv2
 import math
+
 
 DESIRED_HEIGHT = 480
 DESIRED_WIDTH = 480
@@ -26,9 +27,9 @@ plt.rcParams.update({
     'ytick.right': False
 })
 
-mp_hands = mp.solutions.hands
-mp_drawing = mp.solutions.drawing_utils
-mp_drawing_styles = mp.solutions.drawing_styles
+mediapipe_hands = mediapipe.solutions.hands
+mediapipe_drawing = mediapipe.solutions.drawing_utils
+mediapipe_drawing_styles = mediapipe.solutions.drawing_styles
 
 capture = cv2.VideoCapture(1)
 
@@ -73,12 +74,12 @@ def display_batch_of_images_with_gestures_and_hand_landmarks(images, results):
                 landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z) for landmark in hand_landmarks
             ])
 
-            mp_drawing.draw_landmarks(
+            mediapipe_drawing.draw_landmarks(
                 annotated_image,
                 hand_landmarks_proto,
-                mp_hands.HAND_CONNECTIONS,
-                mp_drawing_styles.get_default_hand_landmarks_style(),
-                mp_drawing_styles.get_default_hand_connections_style())
+                mediapipe_hands.HAND_CONNECTIONS,
+                mediapipe_drawing_styles.get_default_hand_landmarks_style(),
+                mediapipe_drawing_styles.get_default_hand_connections_style())
 
         subplot = display_one_image(annotated_image, title, subplot, titlesize=dynamic_titlesize)
 
@@ -115,7 +116,7 @@ images = []
 results = []
 for image_file_name in IMAGE_FILENAMES:
     # STEP 3: Load the input image.
-    image = mp.Image.create_from_file(image_file_name)
+    image = mediapipe.Image.create_from_file(image_file_name)
 
     # STEP 4: Recognize gestures in the input image.
     recognition_result = recognizer.recognize(image)
@@ -125,5 +126,7 @@ for image_file_name in IMAGE_FILENAMES:
     top_gesture = recognition_result.gestures[0][0]
     hand_landmarks = recognition_result.hand_landmarks
     results.append((top_gesture, hand_landmarks))
+
+    print(type(top_gesture))
 
 display_batch_of_images_with_gestures_and_hand_landmarks(images, results)
