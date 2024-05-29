@@ -21,12 +21,13 @@ class Speler(pygame.Rect):
         super().__init__(self.x,self.y, self.afb.get_width(),self.afb.get_height())
 
     
-    def bewegen(self,toetsen):
-        self.toetsen = toetsen
+    def bewegen(self,hand_beweging):
         nieuwe_x= self.x
-        if self.toetsen[pygame.K_LEFT]:
+        #links bewegen
+        if hand_beweging["naar_links"]:
             nieuwe_x = self.x - self.snelheid
-        if self.toetsen[pygame.K_RIGHT]:
+        #naar rechts
+        if hand_beweging["naar_rechts"]:
             nieuwe_x = self.x + self.snelheid
 
         if not self.randGeraakt(nieuwe_x):
@@ -39,12 +40,11 @@ class Speler(pygame.Rect):
         
         return False
     
-    def schieten(self):
+    def schieten(self, hand_beweging):
         if self.tijd > time.time() - 0.5:
             return
         
-        self.toetsen = toetsen
-        if self.toetsen[pygame.K_SPACE]:
+        if hand_beweging["schieten"]:
             self.kogels.append(pygame.Rect(self.x+ self.afb.get_width()//2,self.y,self.afbkogel.get_width(),self.afbkogel.get_height()))
             self.tijd = time.time()
         
@@ -236,12 +236,13 @@ while True:
         "doen"
         speler = levens[0]
 
-        toetsen = pygame.key.get_pressed()
+        hand_beweging = {"naar_links": True , "naar_rechts": False, "schieten": False, "positie":(0.1,0.1)}
+        pygame.draw.circle(screen,(255,0,0),(hand_beweging["positie"][0]*BREEDTE,hand_beweging["positie"][1]*HOOGTE), 5)
         pygame.event.pump()
         
 
-        speler.bewegen(toetsen)
-        speler.schieten()
+        speler.bewegen(hand_beweging)
+        speler.schieten(hand_beweging)
         for index,kogel in enumerate(speler.kogels) : speler.kogels[index][1] = speler.kogels[index][1] - speler.kogelsnelheid
 
         Huidigetegenstander+=1
@@ -289,6 +290,7 @@ while True:
     elif gewonnen == -1:
         screen.blit(verloren_afb,(100,100))
     else:
+        pygame.draw.circle(screen,(255,0,0),(hand_beweging["positie"][0]*BREEDTE,hand_beweging["positie"][1]*HOOGTE), 5)
         screen.blit(speler.afb,(speler.x,speler.y))
         for index,kogel in enumerate(speler.kogels): screen.blit(afb_kogels, (kogel[0],kogel[1]))
         Levens_afb=font2.render(f"Levens: {len(levens)}/3",1,True, (0,255,0) )
@@ -298,18 +300,3 @@ while True:
 
     
     pygame.display.flip()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
