@@ -1,6 +1,9 @@
 import pygame
 import time
 import random
+import threading
+import gestureDetectionCamera
+import math
 
 class Speler(pygame.Rect): 
 
@@ -22,16 +25,18 @@ class Speler(pygame.Rect):
 
     
     def bewegen(self,hand_beweging):
-        nieuwe_x= self.x
-        #links bewegen
-        if hand_beweging["naar_links"]:
-            nieuwe_x = self.x - self.snelheid
-        #naar rechts
-        if hand_beweging["naar_rechts"]:
-            nieuwe_x = self.x + self.snelheid
 
-        if not self.randGeraakt(nieuwe_x):
-            self.x=nieuwe_x
+        if camera.handMovement != {}:
+            nieuwe_x= self.x
+            #links bewegen
+            if camera.handMovement["moveLeft"]:
+                nieuwe_x = self.x - self.snelheid
+            #naar rechts
+            if camera.handMovement['moveRight']:
+                nieuwe_x = self.x + self.snelheid
+
+            if not self.randGeraakt(nieuwe_x):
+                self.x=nieuwe_x
             
     
     def randGeraakt(self,nieuwe_x):       
@@ -109,11 +114,14 @@ class Tegenstander(pygame.Rect):
         
     
     def beweeghorizontaal(self,richting,BREEDTE):
-        
+
+
+        #rechts
         if richting == "Rechts":
             self.x = self.x + 9
             if self.x + self.afb.get_width() >= BREEDTE:
                 return True
+        #links
         elif richting == "Links":
             self.x = self.x - 9
             if self.x <= 0:
@@ -213,8 +221,8 @@ font2=pygame.font.SysFont("Arial", 30)
 hallo_afb = font.render( "YOU WIN", True, (0,255,0) )
 verloren_afb = font.render( "YOU LOSE" , True, (255,0,0) )
 
-
-
+camera = gestureDetectionCamera.Webcam(0)
+camera.start()
 
 while True:
     klok.tick(FPS)
@@ -223,6 +231,7 @@ while True:
             # Check for the quit event
             if event.type == pygame.QUIT:
                 # Quit the game
+                camera.stop()
                 pygame.quit()
     
     if len(levens) == 0:
@@ -298,5 +307,4 @@ while True:
         screen.blit(Levens_afb,(20,10))
         screen.blit(High_score,(20,40))
 
-    
     pygame.display.flip()
