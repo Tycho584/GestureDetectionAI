@@ -314,7 +314,8 @@ while True:
         else:
             kleur_cursor = (255,0,0)
 
-        pygame.draw.circle(screen,kleur_cursor,(100,100), 10)
+        if camera.handMovement != {}:
+            pygame.draw.circle(screen,kleur_cursor,(camera.handMovement['middleFingerMCPXPosition'] * BREEDTE,camera.handMovement['middleFingerMCPYPosition'] * HOOGTE), 10)
         screen.blit(speler.afb,(speler.x,speler.y))
         for index,kogel in enumerate(speler.kogels): screen.blit(afb_kogels, (kogel[0],kogel[1]))
         Levens_afb=font2.render(f"Levens: {len(levens)}/3",1,True, (0,255,0) )
