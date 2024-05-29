@@ -6,6 +6,23 @@ import cv2
 
 handMovement = {}
 
+def getHandGestures(xPositionHand, yPositionHand):
+    handMovement["middleFingerMCPXPosition"] = xPositionHand
+    handMovement["middleFingerMCPYPosition"] = yPositionHand
+
+    if handMovement['middleFingerMCPXPosition'] <= 0.45:
+        handMovement["moveLeft"] = True
+    else:
+        handMovement['moveLeft'] = False
+
+    if handMovement['middleFingerMCPXPosition'] >= 0.55:
+        handMovement['moveRight'] = True
+    else:
+        handMovement['moveRight'] = False
+
+    return handMovement
+
+
 mp_drawing = mp.solutions.drawing_utils
 # mediapipe_hands = mediapipe.solutions.hands
 # mp_hands = hands.Hands
@@ -32,19 +49,7 @@ with mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) a
 
                 for index, landmark in enumerate(hand_lms.landmark[9 : 13]):
                     if index == 0:
-                        handMovement["middleFingerMCPXPosition"] = landmark.x
-                        handMovement["middleFingerMCPYPosition"] = landmark.y
-
-                        if handMovement['middleFingerMCPXPosition'] <= 0.45:
-                            handMovement["moveLeft"] = True
-                        else:
-                            handMovement['moveLeft'] = False
-
-                        if handMovement['middleFingerMCPXPosition'] >= 0.55:
-                            handMovement['moveRight'] = True
-                        else:
-                            handMovement['moveRight'] = False
-
+                        getHandGestures(landmark.x, landmark.y)
                     print(handMovement)
     
         cv2.imshow('Webcam', image)
