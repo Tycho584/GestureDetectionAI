@@ -14,6 +14,7 @@ class Speler(pygame.Rect):
         self.y= HOOGTE-self.afb.get_height()
         self.kogel_x = BREEDTE//2-self.afb.get_width()//2
         self.kogel_y = HOOGTE-self.afb.get_height()
+        self.kan_schieten = True
         self.kogels = []
         self.tijd = 0
         self.snelheid = snelheid
@@ -44,7 +45,10 @@ class Speler(pygame.Rect):
         if self.tijd > time.time() - 0.5:
             return
         
+        self.kan_schieten = True
+
         if hand_beweging["schieten"]:
+            self.kan_schieten = False
             self.kogels.append(pygame.Rect(self.x+ self.afb.get_width()//2,self.y,self.afbkogel.get_width(),self.afbkogel.get_height()))
             self.tijd = time.time()
         
@@ -240,6 +244,12 @@ while True:
         pygame.draw.circle(screen,(255,0,0),(hand_beweging["positie"][0]*BREEDTE,hand_beweging["positie"][1]*HOOGTE), 5)
         pygame.event.pump()
         
+        # muis = pygame.mouse.get_pos()
+
+        # hand_beweging = {"naar_links": muis[0] < BREEDTE/2, "naar_rechts": muis[0] > BREEDTE/2, "schieten": pygame.mouse.get_pressed()[0]}
+
+       
+
 
         speler.bewegen(hand_beweging)
         speler.schieten(hand_beweging)
@@ -290,7 +300,12 @@ while True:
     elif gewonnen == -1:
         screen.blit(verloren_afb,(100,100))
     else:
-        pygame.draw.circle(screen,(255,0,0),(hand_beweging["positie"][0]*BREEDTE,hand_beweging["positie"][1]*HOOGTE), 5)
+        if speler.kan_schieten:
+            kleur_cursor = (0,255,0)
+        else:
+            kleur_cursor = (255,0,0)
+
+        pygame.draw.circle(screen,kleur_cursor,(100,100), 10)
         screen.blit(speler.afb,(speler.x,speler.y))
         for index,kogel in enumerate(speler.kogels): screen.blit(afb_kogels, (kogel[0],kogel[1]))
         Levens_afb=font2.render(f"Levens: {len(levens)}/3",1,True, (0,255,0) )
