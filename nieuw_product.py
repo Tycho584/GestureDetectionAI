@@ -40,12 +40,17 @@ class Webcam:
     def checkIfShipShouldShoot(self,xPositionThumb, yPositionThumb, xPositionIndex, yPositionIndex):
         print(xPositionIndex,yPositionIndex,xPositionThumb,yPositionThumb)
 
-        distance = math.sqrt(pow(pow(xPositionIndex,2) - pow(yPositionIndex,2),2) + pow(pow(xPositionThumb,2) - pow(yPositionThumb,2),2))
+        distance = math.sqrt(pow(xPositionIndex - yPositionIndex, 2) + pow(xPositionThumb - yPositionThumb, 2))
         
-        if distance <= 0.2:
+        if distance <= 0.2 * self.stream.get(cv2.CAP_PROP_FRAME_WIDTH):
             self.handMovement['shoot'] = True
         else:
             self.handMovement['shoot'] = False
+
+        print(distance)
+        print(distance)
+        print(distance)
+        print(distance)
 
     def update(self):
         # Capture each frame from the webcam
