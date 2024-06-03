@@ -46,6 +46,9 @@ class Webcam:
 
         self.handMovement = handMovement
 
+    def  checkIfShipShouldShoot(self, xPosiitonThumb, yPositionThumb, xPositionIndex, yPositionIndex):
+        pass
+
     def update(self):
         print("Update start")
         with mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) as hands:
