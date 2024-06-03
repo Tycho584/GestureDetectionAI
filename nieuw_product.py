@@ -100,14 +100,14 @@ class Webcam:
             # print(" ")  # New line for better readability of the printed output
 
         # Display the image in a window
-        # cv2.imshow("Image", img)
+        cv2.imshow("Image", img)
 
         # Keep the window open and update it for each frame; wait for 1 millisecond between frames
-        # cv2.waitKey(1)
+        cv2.waitKey(1)
 
 
 
 if __name__ == "__main__":
-    camera = Webcam(0)
+    camera = Webcam(1)
     while True:
         camera.update()
