@@ -47,10 +47,13 @@ with mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) a
                                                 color=(20, 180, 90), thickness=2, circle_radius=2)
                                             )  
 
-                for index, landmark in enumerate(hand_lms.landmark[9 : 13]):
-                    if index == 0:
+                for index, landmark in enumerate(hand_lms.landmark):
+                    if index == 4:
+                        
+
+
+                    if index == 9:
                         getHandGestures(landmark.x, landmark.y)
-                    print(handMovement)
     
         cv2.imshow('Webcam', image)
     
