@@ -225,7 +225,7 @@ font2=pygame.font.SysFont("Arial", 30)
 hallo_afb = font.render( "YOU WIN", True, (0,255,0) )
 verloren_afb = font.render( "YOU LOSE" , True, (255,0,0) )
 
-camera = gestureDetectionCamera.Webcam(0)
+camera = gestureDetectionCamera.Webcam(1)
 camera.start()
 
 while True:
