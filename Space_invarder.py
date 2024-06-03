@@ -52,7 +52,7 @@ class Speler(pygame.Rect):
         
         self.kan_schieten = True
 
-        if hand_beweging["schieten"]:
+        if camera.handMovement['shoot']:
             self.kan_schieten = False
             self.kogels.append(pygame.Rect(self.x+ self.afb.get_width()//2,self.y,self.afbkogel.get_width(),self.afbkogel.get_height()))
             self.tijd = time.time()

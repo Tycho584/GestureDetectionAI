@@ -3,6 +3,7 @@ import mediapipe as mp
 import mediapipe.python
 import mediapipe.python.solutions.hands as mp_hands
 import cv2
+import math
 
 class Webcam:
     def __init__(self, src = 0, fps = 60, width = 120, height = 720) -> None:
@@ -44,8 +45,17 @@ class Webcam:
 
         self.handMovement = handMovement
 
-    def  checkIfShipShouldShoot(self, xPosiitonThumb, yPositionThumb, xPositionIndex, yPositionIndex):
-        pass
+    def checkIfShipShouldShoot(self,xPositionThumb, yPositionThumb, xPositionIndex, yPositionIndex):
+        print(xPositionIndex,yPositionIndex,xPositionThumb,yPositionThumb)
+
+        distance = math.sqrt(pow(pow(xPositionIndex,2) - pow(yPositionIndex,2),2) + pow(pow(xPositionThumb,2) - pow(yPositionThumb,2),2))
+        
+        if distance <= 0.2:
+            self.handMovement['schoot'] = True
+        else:
+            self.handMovement['shoot'] = False
+
+        return self.handMovement
 
     def update(self):
         print("Update start")
@@ -72,8 +82,12 @@ class Webcam:
                                                         color=(20, 180, 90), thickness=2, circle_radius=2)
                                                     )  
 
-                        for index, landmark in enumerate(hand_lms.landmark[9 : 13]):
-                            if index == 0:
+                        for index, landmark in enumerate(hand_lms.landmark):
+                            if index == 4:
+                                self.checkIfShipShouldShoot(landmark.x, landmark.y, hand_lms.landmark[8].x, hand_lms.landmark[8].y)
+
+
+                            if index == 9:
                                 self.getHandGestures(landmark.x, landmark.y)
                 print(self.handMovement)
 

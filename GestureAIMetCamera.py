@@ -7,6 +7,7 @@ import cv2
 handMovement = {}
 
 def getHandGestures(xPositionHand, yPositionHand):
+    print(xPositionHand,yPositionHand)
     handMovement["middleFingerMCPXPosition"] = xPositionHand
     handMovement["middleFingerMCPYPosition"] = yPositionHand
 
@@ -21,6 +22,9 @@ def getHandGestures(xPositionHand, yPositionHand):
         handMovement['moveRight'] = False
 
     return handMovement
+
+def  checkIfShipShouldShoot(xPosiitonThumb, yPositionThumb, xPositionIndex, yPositionIndex):
+    print(xPosiitonThumb,yPositionThumb, xPositionIndex, yPositionIndex)
 
 
 mp_drawing = mp.solutions.drawing_utils
@@ -49,8 +53,7 @@ with mp_hands.Hands(min_detection_confidence=0.8, min_tracking_confidence=0.5) a
 
                 for index, landmark in enumerate(hand_lms.landmark):
                     if index == 4:
-                        
-
+                        checkIfShipShouldShoot(landmark.x, landmark.y, hand_lms.landmark[8].x, hand_lms.landmark[8].y)
 
                     if index == 9:
                         getHandGestures(landmark.x, landmark.y)
