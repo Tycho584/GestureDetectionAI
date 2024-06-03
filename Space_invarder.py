@@ -2,7 +2,8 @@ import pygame
 import time
 import random
 import threading
-import gestureDetectionCamera
+# import gestureDetectionCamera
+import nieuw_product
 import math
 
 class Speler(pygame.Rect): 
@@ -225,17 +226,17 @@ font2=pygame.font.SysFont("Arial", 30)
 hallo_afb = font.render( "YOU WIN", True, (0,255,0) )
 verloren_afb = font.render( "YOU LOSE" , True, (255,0,0) )
 
-camera = gestureDetectionCamera.Webcam(1)
-camera.start()
+camera = nieuw_product.Webcam(0)
 
 while True:
+    camera.update()
+
     klok.tick(FPS)
 
     for event in pygame.event.get():
             # Check for the quit event
             if event.type == pygame.QUIT:
                 # Quit the game
-                camera.stop()
                 pygame.quit()
     
     if len(levens) == 0:
@@ -248,9 +249,8 @@ while True:
     else:
         "doen"
         speler = levens[0]
-
-        hand_beweging = {"naar_links": True , "naar_rechts": False, "schieten": False, "positie":(0.1,0.1)}
-        pygame.draw.circle(screen,(255,0,0),(hand_beweging["positie"][0]*BREEDTE,hand_beweging["positie"][1]*HOOGTE), 5)
+        hand_beweging = camera.handMovement
+        pygame.draw.circle(screen,(255,0,0),(hand_beweging["middleFingerMCPXPosition"]*BREEDTE,hand_beweging["middleFingerMCPYPosition"]*HOOGTE), 5)
         pygame.event.pump()
         
         # muis = pygame.mouse.get_pos()
