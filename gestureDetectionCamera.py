@@ -1,5 +1,6 @@
 from threading import Thread
 import mediapipe as mp
+from cvzone import HandTrackingModule
 import mediapipe.python
 import mediapipe.python.solutions.hands as mp_hands
 import cv2
@@ -11,6 +12,7 @@ class Webcam:
         self.stopped = False
         self.src = src
         self.handMovement = {}
+        self.detector = HandTrackingModule.HandDetector(maxHands=2, detectionCon=0.8, staticMode=True)
         self.mp_drawing = mp.solutions.drawing_utils
 
 
